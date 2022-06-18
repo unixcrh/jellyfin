@@ -841,6 +841,65 @@ namespace MediaBrowser.MediaEncoding.Probing
                 {
                     stream.ColorPrimaries = streamInfo.ColorPrimaries;
                 }
+
+                if (streamInfo.SideDataList != null)
+                {
+                    foreach (var data in streamInfo.SideDataList)
+                    {
+                        // Parse Dolby Vision metadata from side_data
+                        if (string.Equals(GetDictionaryValue(data, "side_data_type"), "DOVI configuration record", StringComparison.OrdinalIgnoreCase))
+                        {
+                            int val;
+                            var dvVersionMajor = GetDictionaryValue(data, "dv_version_major");
+                            if (!string.IsNullOrEmpty(dvVersionMajor) && int.TryParse(dvVersionMajor, out val))
+                            {
+                                stream.DvVersionMajor = val;
+                            }
+
+                            var dvVersionMinor = GetDictionaryValue(data, "dv_version_minor");
+                            if (!string.IsNullOrEmpty(dvVersionMinor) && int.TryParse(dvVersionMinor, out val))
+                            {
+                                stream.DvVersionMinor = val;
+                            }
+
+                            var dvProfile = GetDictionaryValue(data, "dv_profile");
+                            if (!string.IsNullOrEmpty(dvProfile) && int.TryParse(dvProfile, out val))
+                            {
+                                stream.DvProfile = val;
+                            }
+
+                            var dvLevel = GetDictionaryValue(data, "dv_level");
+                            if (!string.IsNullOrEmpty(dvLevel) && int.TryParse(dvLevel, out val))
+                            {
+                                stream.DvLevel = val;
+                            }
+
+                            var rpuPresentFlag = GetDictionaryValue(data, "rpu_present_flag");
+                            if (!string.IsNullOrEmpty(rpuPresentFlag) && int.TryParse(rpuPresentFlag, out val))
+                            {
+                                stream.RpuPresentFlag = val;
+                            }
+
+                            var elPresentFlag = GetDictionaryValue(data, "el_present_flag");
+                            if (!string.IsNullOrEmpty(elPresentFlag) && int.TryParse(elPresentFlag, out val))
+                            {
+                                stream.ElPresentFlag = val;
+                            }
+
+                            var blPresentFlag = GetDictionaryValue(data, "bl_present_flag");
+                            if (!string.IsNullOrEmpty(blPresentFlag) && int.TryParse(blPresentFlag, out val))
+                            {
+                                stream.BlPresentFlag = val;
+                            }
+
+                            var dvBlSignalCompatibilityId = GetDictionaryValue(data, "dv_bl_signal_compatibility_id");
+                            if (!string.IsNullOrEmpty(dvBlSignalCompatibilityId) && int.TryParse(dvBlSignalCompatibilityId, out val))
+                            {
+                                stream.DvBlSignalCompatibilityId = val;
+                            }
+                        }
+                    }
+                }
             }
             else
             {
